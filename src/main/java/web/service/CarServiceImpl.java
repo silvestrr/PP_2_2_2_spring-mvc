@@ -2,11 +2,14 @@ package web.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import web.dao.CarDaoImpl;
 import web.mоdel.Car;
 
 import java.util.List;
-@Component
+import java.util.stream.Collectors;
+
+@Service
 public class CarServiceImpl implements CarService{
 
     private final CarDaoImpl carDao;
@@ -18,10 +21,12 @@ public class CarServiceImpl implements CarService{
     public List<Car> saveCar() {
         return carDao.saveCar();
     }
-    @Override
     public List<Car> getSpecifiedByNumberOfCars(int count) {
-        return carDao.getCars().stream().limit(count).toList();
+        if (count == 0) {
+            return carDao.getCars();
+        } else {
+            return carDao.getCars().stream().limit(count).collect(Collectors.toList());
+        }
+
     }
-
-
 }
